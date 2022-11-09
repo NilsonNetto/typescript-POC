@@ -1,6 +1,7 @@
 import { Request,Response } from "express"
-import { Game } from "../protocols/Game"
-import { gameSchema } from "../schemas/gameSchema";
+import { Game } from "../protocols/Game.js"
+import { gameSchema } from "../schemas/gameSchema.js";
+import * as gamesRepositories from "../repositories/gamesRepositories.js"
 
 const addGame = (req: Request,res: Response) =>{
   const newGame = req.body as Game;
@@ -14,8 +15,15 @@ const addGame = (req: Request,res: Response) =>{
 
 }
 
-const listGames = (req: Request,res: Response) =>{
+const listGames = async (req: Request,res: Response) =>{
   
+try {
+  const gamesList = await gamesRepositories.listAllGames();
+  return res.status(200).send(gamesList.rows)
+} catch (error) {
+  console.log(error)
+  return res.sendStatus(500)
+}
 }
 
 const modifyGame = (req: Request,res: Response)=>{

@@ -13,8 +13,8 @@ const insertGame = async () =>{
   `,[])
 }
 
-const listAllGames = async ()=>{
-  return connection.query(`
+const listAllGames = async ()=> {
+  return await connection.query(`
   SELECT *
   from games;
   `)
