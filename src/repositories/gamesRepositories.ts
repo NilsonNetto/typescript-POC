@@ -1,13 +1,13 @@
 import { QueryResult } from "pg";
 import connection from "../database/gamesDB.js"
-import { GameEntity, NewGame } from "../protocols/Game.js";
+import { GameEntity, GameUpdate, NewGame } from "../protocols/Game.js";
 
 const listGameByName = async (gameTitle: string) : Promise<QueryResult<GameEntity>> =>{
   return connection.query(`
   SELECT *
   FROM games
   WHERE LOWER(title) = LOWER($1);
-  `,[gameTitle])
+  `,[gameTitle]);
 }
 
 const listGameById = async (gameId: number) : Promise<QueryResult<GameEntity>> =>{
@@ -15,7 +15,7 @@ const listGameById = async (gameId: number) : Promise<QueryResult<GameEntity>> =
   SELECT *
   FROM games
   WHERE id = $1;
-  `,[gameId])
+  `,[gameId]);
 }
 
 const insertGame = async (newGame: NewGame): Promise<QueryResult> =>{
@@ -31,18 +31,36 @@ const insertGame = async (newGame: NewGame): Promise<QueryResult> =>{
   newGame.plataform,
   newGame.purchased,
   newGame.gameplayTime,
-  newGame.price])
+  newGame.price]);
 }
 
 const listAllGames = async (): Promise<QueryResult<GameEntity>> => {
   return connection.query(`
   SELECT *
   FROM games;
-  `)
+  `);
 }
 
-const updateGame = async ()=>{
-
+const updateGame = async (gameData: GameUpdate, gameId: number)=>{
+  return connection.query(`
+  UPDATE games
+  SET
+  "title" = $1,
+  "plataform" = $2,
+  "purchased" = $3,
+  "played" = $4,
+  "gameplayTime" = $5,
+  "price" = $6
+  WHERE id = $7;
+  ` ,[
+    gameData.title,
+    gameData.plataform,
+    gameData.purchased,
+    gameData.played,
+    gameData.gameplayTime,
+    gameData.price,
+    gameId
+  ]);
 }
 
 const removeGame = async(gameId: number) : Promise<QueryResult> =>{
@@ -50,7 +68,7 @@ const removeGame = async(gameId: number) : Promise<QueryResult> =>{
   DELETE
   FROM games
   WHERE id = $1;
-  `,[gameId])
+  `,[gameId]);
 }
 
 export {listGameByName, listGameById, insertGame, listAllGames, updateGame, removeGame}

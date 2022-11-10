@@ -9,3 +9,5 @@ export type GameEntity = {
 }
 
 export type NewGame = Omit<GameEntity, "id" | "played">
+
+export type GameUpdate = Omit<GameEntity, "id">
