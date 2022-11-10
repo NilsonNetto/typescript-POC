@@ -65,9 +65,10 @@ const modifyGame = async (req: Request,res: Response)=>{
     
     const isRepeated = await gamesRepositories.listGameByName(gameData.title);
 
-    //ARRUMAR PQ ELE NÃO DEIXA ATUALIZAR OUTRAS INFOS SE CONTINUAR COM MESMO NOME
     if(isRepeated.rowCount !== 0){
-      return res.status(409).send(`Game already on wishlist with id ${isRepeated.rows[0].id}`);
+      if(isRepeated.rows[0].id !== gameId){
+        return res.status(409).send(`Game already on wishlist with id ${isRepeated.rows[0].id}`);
+      }
     }
 
     await gamesRepositories.updateGame(gameData, gameId);
