@@ -10,6 +10,14 @@ const listGameByName = async (gameTitle: string) : Promise<QueryResult<GameEntit
   `,[gameTitle])
 }
 
+const listGameById = async (gameId: number) : Promise<QueryResult<GameEntity>> =>{
+  return connection.query(`
+  SELECT *
+  FROM games
+  WHERE id = $1;
+  `,[gameId])
+}
+
 const insertGame = async (newGame: NewGame): Promise<QueryResult> =>{
   return connection.query(`
   INSERT INTO games
@@ -37,8 +45,12 @@ const updateGame = async ()=>{
 
 }
 
-const removeGame = async() =>{
-
+const removeGame = async(gameId: number) : Promise<QueryResult> =>{
+  return connection.query(`
+  DELETE
+  FROM games
+  WHERE id = $1;
+  `,[gameId])
 }
 
-export {listGameByName, insertGame, listAllGames, updateGame, removeGame}
+export {listGameByName, listGameById, insertGame, listAllGames, updateGame, removeGame}

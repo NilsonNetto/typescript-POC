@@ -18,7 +18,7 @@ const addGame = async (req: Request,res: Response) =>{
     const isRepeated = await gamesRepositories.listGameByName(newGame.title);
 
     if(isRepeated.rowCount !== 0){
-      return res.status(400).send(`Game already on wishlist with id ${isRepeated.rows[0].id}`);
+      return res.status(409).send(`Game already on wishlist with id ${isRepeated.rows[0].id}`);
     }
     
     await gamesRepositories.insertGame(newGame);
@@ -46,9 +46,28 @@ const modifyGame = (req: Request,res: Response)=>{
 
 }
 
-const deleteGame = (req: Request,res: Response) =>{
-  const gameId = Number(req.params.id) as number
+const deleteGame = async (req: Request,res: Response) =>{
+  const gameId = Number(req.params.id) as number;
 
+  if(isNaN(gameId)){
+    return res.status(400).send(`Game id must be a valid number`);
+  }
+
+  try {
+    
+    const gameExists = await gamesRepositories.listGameById(gameId);
+
+    if(gameExists.rowCount === 0){
+      return res.status(400).send(`Game id doesn't exists`);
+    }
+
+    await gamesRepositories.removeGame(gameId);
+
+    return res.status(200).send(`Game removed from wishlist`);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
 }
 
 export {addGame, listGames, modifyGame, deleteGame}
