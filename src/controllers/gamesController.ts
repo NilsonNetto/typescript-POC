@@ -41,6 +41,54 @@ try {
 }
 }
 
+const listGamesByPlataform = async (req: Request, res: Response) =>{
+
+  const plataform = req.params.plataform as string;
+
+  try {
+    
+    const gamesListInPlataform = await gamesRepositories.listGamesWithPlataform(plataform);
+
+    return res.status(200).send(gamesListInPlataform.rows)
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
+const listTotalPrice = async (req: Request, res: Response) => {
+
+  try {
+    
+    const totalPrice = await gamesRepositories.countTotalPrice();
+
+    const message: string = `
+    To buy all nonpurchased games on wishlist you'll need R$ ${(totalPrice.rows[0].totalPrice/100).toFixed(2)}`;
+
+    return res.status(200).send(message);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
+const listTotalGameplayTime = async (req: Request, res: Response) => {
+
+  try {
+    
+    const totalGameplayTime = await gamesRepositories.countTotalGameplayTime();
+
+    const message: string = `
+    To play all unplayed games on wishlist you'll need ${totalGameplayTime.rows[0].totalGameplayTime} hours`;
+
+    return res.status(200).send(message);
+
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
 const modifyGame = async (req: Request,res: Response)=>{
   const gameId = Number(req.params.id) as number;
   const gameData = req.body as GameUpdate;
@@ -105,4 +153,11 @@ const deleteGame = async (req: Request,res: Response) =>{
   }
 }
 
-export {addGame, listGames, modifyGame, deleteGame}
+export {
+  addGame, 
+  listGames, 
+  listGamesByPlataform, 
+  listTotalPrice,
+  listTotalGameplayTime,
+  modifyGame, 
+  deleteGame}
