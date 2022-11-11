@@ -60,6 +60,21 @@ const countTotalPrice = async () : Promise<QueryResult<{totalPrice: number}>> =>
   `)
 }
 
+const countTotalPriceByPlataform = async () :Promise<QueryResult<{
+  plataform: string,
+  totalPrice: number
+}>> =>{
+  return connection.query(`
+  SELECT
+  plataform,
+  SUM(price) as "totalPrice"
+  FROM games
+  WHERE 
+  purchased = false
+  GROUP BY plataform;
+  `)
+}
+
 const countTotalGameplayTime = async () :Promise<QueryResult<{totalGameplayTime :number}>> =>{
   return connection.query(`
   SELECT
@@ -92,6 +107,24 @@ const updateGame = async (gameData: GameUpdate, gameId: number)=>{
   ]);
 }
 
+const updateToPurchased = async (gameId: number) =>{
+  return connection.query(`
+  UPDATE games
+  SET
+  purchased = true
+  WHERE id = $1
+  `,[gameId])
+}
+
+const updateToPlayed = async (gameId: number) =>{
+  return connection.query(`
+  UPDATE games
+  SET
+  played = true
+  WHERE id = $1
+  `,[gameId])
+}
+
 const removeGame = async(gameId: number) : Promise<QueryResult> =>{
   return connection.query(`
   DELETE
@@ -107,6 +140,9 @@ export {
   listAllGames, 
   listGamesWithPlataform,
   countTotalPrice,
+  countTotalPriceByPlataform,
   countTotalGameplayTime, 
-  updateGame, 
+  updateGame,
+  updateToPurchased,
+  updateToPlayed, 
   removeGame}

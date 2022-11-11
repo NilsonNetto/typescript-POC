@@ -72,6 +72,19 @@ const listTotalPrice = async (req: Request, res: Response) => {
   }
 }
 
+const listTotalPriceByPlataform = async(req:Request, res: Response) =>{
+
+  try {
+    
+    const totalPriceByPlataform = await gamesRepositories.countTotalPriceByPlataform();
+
+    return res.status(200).send(totalPriceByPlataform.rows)
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
 const listTotalGameplayTime = async (req: Request, res: Response) => {
 
   try {
@@ -129,6 +142,52 @@ const modifyGame = async (req: Request,res: Response)=>{
 
 }
 
+const purchaseGame = async (req:Request, res: Response) =>{
+  const gameId = Number(req.params.id) as number;
+
+  if(isNaN(gameId)){
+    return res.status(400).send(`Game id must be a valid number`);
+  }
+  try {
+         
+    const gameExists = await gamesRepositories.listGameById(gameId);
+
+    if(gameExists.rowCount === 0){
+      return res.status(400).send(`Game id doesn't exists`);
+    }
+
+    await gamesRepositories.updateToPurchased(gameId);
+
+    return res.status(200).send(`${gameExists.rows[0].title} marked as played`);  
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+}
+
+const playedGame = async (req:Request, res: Response) =>{
+  const gameId = Number(req.params.id) as number;
+
+  if(isNaN(gameId)){
+    return res.status(400).send(`Game id must be a valid number`);
+  }
+  try {
+     
+    const gameExists = await gamesRepositories.listGameById(gameId);
+
+    if(gameExists.rowCount === 0){
+      return res.status(400).send(`Game id doesn't exists`);
+    }
+
+    await gamesRepositories.updateToPlayed(gameId);
+
+    return res.status(200).send(`${gameExists.rows[0].title} marked as played`);   
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+}
+
 const deleteGame = async (req: Request,res: Response) =>{
   const gameId = Number(req.params.id) as number;
 
@@ -158,6 +217,9 @@ export {
   listGames, 
   listGamesByPlataform, 
   listTotalPrice,
+  listTotalPriceByPlataform,
   listTotalGameplayTime,
-  modifyGame, 
+  modifyGame,
+  purchaseGame,
+  playedGame, 
   deleteGame}
