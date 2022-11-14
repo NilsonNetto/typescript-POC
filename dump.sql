@@ -21,7 +21,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: games; Type: TABLE; Schema: public; Owner: -
+-- Name: games; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.games (
@@ -35,8 +35,10 @@ CREATE TABLE public.games (
 );
 
 
+ALTER TABLE public.games OWNER TO postgres;
+
 --
--- Name: games_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: games_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE public.games_id_seq
@@ -48,39 +50,44 @@ CREATE SEQUENCE public.games_id_seq
     CACHE 1;
 
 
+ALTER TABLE public.games_id_seq OWNER TO postgres;
+
 --
--- Name: games_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: games_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE public.games_id_seq OWNED BY public.games.id;
 
 
 --
--- Name: games id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: games id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.games ALTER COLUMN id SET DEFAULT nextval('public.games_id_seq'::regclass);
 
 
 --
--- Data for Name: games; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: games; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.games VALUES (1, 'Elden ring', 'Steam', true, false, 102, 0);
-INSERT INTO public.games VALUES (2, 'Mass Effect', 'Origin', true, false, 28, 0);
-INSERT INTO public.games VALUES (3, 'Sekiro', 'Steam', false, false, 44, 19990);
-INSERT INTO public.games VALUES (4, 'Horizon Zero Dawn', 'Steam', false, false, 54, 19990);
-
-
---
--- Name: games_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.games_id_seq', 4, true);
+COPY public.games (id, title, plataform, purchased, played, "gameplayTime", price) FROM stdin;
+1	Elden ring	Steam	t	f	102	0
+2	Mass Effect	Origin	t	f	28	0
+3	Sekiro	Steam	f	f	44	19990
+4	Horizon Zero Dawn	Steam	f	f	54	19990
+6	God of War	PS5	f	f	80	30000
+\.
 
 
 --
--- Name: games games_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: games_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.games_id_seq', 6, true);
+
+
+--
+-- Name: games games_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.games
@@ -88,7 +95,7 @@ ALTER TABLE ONLY public.games
 
 
 --
--- Name: games games_title_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: games games_title_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.games

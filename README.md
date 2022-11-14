@@ -19,7 +19,7 @@ This is a simple wishlist for all games that you want to play, having the game i
 4. In the root of the project, insert the dump file on the database that you have created
 
 ```bash
- psql DATABASE_NAME < dump.sql
+ sudo -u postgres psql DATABASE_NAME < dump.sql
 ```
 
 5. Configure the `.env` file using the `.env.example`

@@ -62,10 +62,10 @@ const listTotalPrice = async (req: Request, res: Response) => {
     
     const totalPrice = await gamesRepositories.countTotalPrice();
 
-    const message: string = `
-    To buy all nonpurchased games on wishlist you'll need R$ ${(totalPrice.rows[0].totalPrice/100).toFixed(2)}`;
+    const message: string = 
+    `To buy all nonpurchased games on wishlist you'll need R$ ${(totalPrice.rows[0].totalPrice/100).toFixed(2)}`;
 
-    return res.status(200).send(message);
+    return res.status(200).send({message});
   } catch (error) {
     console.log(error);
     return res.sendStatus(500);
@@ -91,10 +91,10 @@ const listTotalGameplayTime = async (req: Request, res: Response) => {
     
     const totalGameplayTime = await gamesRepositories.countTotalGameplayTime();
 
-    const message: string = `
-    To play all unplayed games on wishlist you'll need ${totalGameplayTime.rows[0].totalGameplayTime} hours`;
+    const message: string = 
+    `To play all unplayed games on wishlist you'll need ${totalGameplayTime.rows[0].totalGameplayTime} hours`;
 
-    return res.status(200).send(message);
+    return res.status(200).send({message});
 
   } catch (error) {
     console.log(error);
